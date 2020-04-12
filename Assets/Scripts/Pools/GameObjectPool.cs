@@ -13,8 +13,8 @@ namespace Assets.Scripts.Pools
 		public GameObjectPool(Transform container, T prefabObj, int startCount, int addingCount = 5)
 		{
 			_prefab = prefabObj;
-			this._addingCount = addingCount;
-			this._container = container;
+			_addingCount = addingCount;
+			_container = container;
 			_instances = new Stack<T>(startCount);
 			AddInstances(startCount);
 		}
@@ -38,21 +38,20 @@ namespace Assets.Scripts.Pools
 		{
 			while (_instances.Count > 0)
 			{
-				GameObject.Destroy(_instances.Pop());
+				Object.Destroy(_instances.Pop().gameObject);
 			}
 		}
-
 
 		private void AddInstances(int count)
 		{
 			for (int i = 0; i < count; i++)
 			{
-				T instance = GameObject.Instantiate(_prefab, _container);
+				T instance = Object.Instantiate(_prefab, _container);
 				instance.gameObject.SetActive(false);
-				var autoReturn = instance.GetComponent<AutoReturnToPool>();
-				if (autoReturn)
+				var completionCheck = instance.GetComponent<ICompletionCheck>();
+				if (completionCheck != null)
 				{
-					autoReturn.OnComplete += () => ReleaseObject(instance);
+					completionCheck.OnComplete += () => ReleaseObject(instance);
 				}
 				_instances.Push(instance);
 			}

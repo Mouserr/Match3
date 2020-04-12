@@ -7,6 +7,7 @@ using Unity.Transforms;
 namespace Assets.Scripts.Systems
 {
 	[UpdateAfter(typeof(SpawnSystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class FallSystem : ComponentSystem
 	{
 		private Field _field;

@@ -8,6 +8,7 @@ namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
 	[UpdateBefore(typeof(BorderSpawnSystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class SpawnSystem : JobComponentSystem
 	{
 		private EntityQuery _systemStateGroup;

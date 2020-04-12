@@ -8,6 +8,8 @@ namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
 	[UpdateAfter(typeof(SpawnSystem))]
+	[UpdateBefore(typeof(FallSystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class StopSpawnSystem : JobComponentSystem
 	{
 		protected override JobHandle OnUpdate(JobHandle inputDeps)

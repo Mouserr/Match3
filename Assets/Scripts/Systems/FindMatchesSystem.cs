@@ -8,6 +8,7 @@ namespace Assets.Scripts.Systems
 	[AlwaysSynchronizeSystem]
 	[AlwaysUpdateSystem]
 	[UpdateAfter(typeof(CheckMovementsCompleteSystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class FindMatchesSystem : JobComponentSystem
 	{
 		private Field _field;

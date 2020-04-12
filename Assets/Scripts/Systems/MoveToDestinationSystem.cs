@@ -9,6 +9,7 @@ namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
 	[UpdateAfter(typeof(SetVelocitySystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class MoveToDestinationSystem : JobComponentSystem
 	{
 		private EntityQuery _systemStateGroup;

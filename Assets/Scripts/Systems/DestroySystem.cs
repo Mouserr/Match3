@@ -6,8 +6,7 @@ using Unity.Jobs;
 namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
-	[UpdateAfter(typeof(DestroyMatchGroupsSystem))]
-	[UpdateAfter(typeof(DestroyBallsSystem))]
+	[UpdateAfter(typeof(MatchLogicGroup))]
 	public class DestroySystem : JobComponentSystem
 	{
 		protected override JobHandle OnUpdate(JobHandle inputDeps)

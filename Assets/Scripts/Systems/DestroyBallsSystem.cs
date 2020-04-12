@@ -10,6 +10,7 @@ namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
 	[UpdateAfter(typeof(DestroyMatchGroupsSystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class DestroyBallsSystem : ComponentSystem
 	{
 		private GameObjectPool<Transform> _effectsPool;
@@ -25,6 +26,11 @@ namespace Assets.Scripts.Systems
 
 		protected override void OnUpdate()
 		{
+			if (_destroyedBallsGroup.IsEmptyIgnoreFilter)
+			{
+				return;
+			}
+
 			var translations = _destroyedBallsGroup.ToComponentDataArray<Translation>(Allocator.TempJob);
 			var cellLinks = _destroyedBallsGroup.ToComponentDataArray<CellLink>(Allocator.TempJob);
 

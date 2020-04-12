@@ -11,7 +11,10 @@ namespace Assets.Scripts
 {
 	public class GameController : MonoBehaviour
 	{
+		private Field _field;
 		private EntityManager _manager;
+		private Entity[] _ballEntityPrefabs;
+		private Entity[] _gravitySwitchEntityPrefabs;
 
 		[SerializeField]
 		private Vector2Int _size;
@@ -32,16 +35,12 @@ namespace Assets.Scripts
 		[SerializeField]
 		private GameObject _selection;
 
-		private Field _field;
-		private Entity[] _ballEntityPrefabs;
-		private Entity[] _gravitySwitchEntityPrefabs;
-
 		private void Start()
 		{
 			_manager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
 			ConvertPrefabs();
-			CreateField();
+			_field = new Field(_size.x, _size.y, _cellSize, _fieldLeftBottomCorner.position, _manager);
 			InitSystems(World.DefaultGameObjectInjectionWorld);
 		}
 
@@ -65,38 +64,17 @@ namespace Assets.Scripts
 
 		private void InitSystems(World world)
 		{
+			world.GetOrCreateSystem<BorderSpawnSystem>().Init(_ballEntityPrefabs);
+			world.GetOrCreateSystem<FindMatchesSystem>().Init(_field);
+			world.GetOrCreateSystem<FallSystem>().Init(_field);
+			world.GetOrCreateSystem<GravitySwitcherPlacementSystem>().Init(_gravitySwitchEntityPrefabs);
+			world.GetOrCreateSystem<DestroyBallsSystem>().Init(_destroyBallPrefab);
 			world.GetOrCreateSystem<ShowSelectionSystem>().Init(_selection);
 			world.GetOrCreateSystem<InputSystem>().Init(_camera, _field);
-			world.GetOrCreateSystem<BorderSpawnSystem>().Init(_ballEntityPrefabs);
-			world.GetOrCreateSystem<FallSystem>().Init(_field);
 			world.GetOrCreateSystem<SwapSystem>().Init(_field);
-			world.GetOrCreateSystem<FindMatchesSystem>().Init(_field);
-			world.GetOrCreateSystem<DestroyBallsSystem>().Init(_destroyBallPrefab);
-			world.GetOrCreateSystem<GravitySwitcherPlacementSystem>().Init(_gravitySwitchEntityPrefabs);
 
 			var stateEntity = _manager.CreateEntity(typeof(SystemState));
 			_manager.AddComponentData(stateEntity, new Gravity { Value = new int2(0, -1) });
-		}
-
-		private void CreateField()
-		{
-			_field = new Field(_size.x, _size.y, _cellSize, _fieldLeftBottomCorner.position);
-			for (int x = 0; x < _size.x; x++)
-			{
-				for (int y = 0; y < _size.y; y++)
-				{
-					var entity = _manager.CreateEntity();
-					_manager.AddComponentData(entity, new Translation { Value = _field.GetWorldPosition(x, y) });
-					_manager.AddComponentData(entity, new GridPosition { Value = new int2(x, y) });
-					_field.SetCell(x, y, entity);
-					if (y == 0 || y == _field.Height - 1)
-					{
-						_manager.AddComponentData(entity, new Border{ RequiredGravity = new int2(0, y == 0 ? 1 : -1) });
-						_manager.AddComponentData(entity, new Spawner { Offset = new float3(0, y == 0 ? -1 : 1, 0) });
-						_manager.AddComponent<SpawnCount>(entity);
-					}
-				}
-			}
 		}
 	}
 }

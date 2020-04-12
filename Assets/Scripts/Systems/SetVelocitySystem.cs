@@ -8,8 +8,6 @@ using Unity.Transforms;
 namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
-	[UpdateAfter(typeof(SwapSystem))]
-	[UpdateAfter(typeof(FallSystem))]
 	public class SetVelocitySystem : JobComponentSystem
 	{
 		protected override JobHandle OnUpdate(JobHandle inputDeps)

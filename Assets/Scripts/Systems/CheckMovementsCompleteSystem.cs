@@ -1,12 +1,12 @@
 ﻿using Assets.Scripts.Components;
 using Unity.Entities;
-using Unity.Jobs;
 
 namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
 	[AlwaysUpdateSystem]
 	[UpdateAfter(typeof(MoveToDestinationSystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class CheckMovementsCompleteSystem : ComponentSystem
 	{
 		private EntityQuery _movementsQuery;

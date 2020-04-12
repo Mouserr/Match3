@@ -1,7 +1,5 @@
 ﻿using Assets.Scripts.Components;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using UnityEngine;
 
 namespace Assets.Scripts.Systems

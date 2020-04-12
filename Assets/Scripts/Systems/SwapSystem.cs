@@ -28,6 +28,11 @@ namespace Assets.Scripts.Systems
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
+			if (_selectedGroup.IsEmptyIgnoreFilter)
+			{
+				return default;
+			}
+
 			var positions = _selectedGroup.ToComponentDataArray<GridPosition>(Allocator.TempJob);
 			var ballLinks = _selectedGroup.ToComponentDataArray<BallLink>(Allocator.TempJob);
 			var entities = _selectedGroup.ToEntityArray(Allocator.TempJob);

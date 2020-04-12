@@ -7,6 +7,7 @@ using Unity.Transforms;
 namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class BorderSpawnSystem : JobComponentSystem
 	{
 		private Entity[] _ballPrefabs;

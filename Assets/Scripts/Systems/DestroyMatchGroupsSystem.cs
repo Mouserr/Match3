@@ -2,13 +2,12 @@
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
-using Unity.Transforms;
 
 namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
 	[UpdateAfter(typeof(FindMatchesSystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class DestroyMatchGroupsSystem : JobComponentSystem
 	{
 		protected override JobHandle OnUpdate(JobHandle inputDeps)

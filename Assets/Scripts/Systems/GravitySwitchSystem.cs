@@ -10,28 +10,20 @@ namespace Assets.Scripts.Systems
 	[UpdateBefore(typeof(DestroySystem))]
 	public class GravitySwitchSystem : JobComponentSystem
 	{
-		private EntityQuery _gravityGroup;
-
-		protected override void OnCreate()
-		{
-			base.OnCreate();
-			_gravityGroup = GetEntityQuery(ComponentType.ReadOnly<SystemState>(), ComponentType.ReadOnly<Gravity>());
-		}
-
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
-			var gravity = _gravityGroup.ToComponentDataArray<Gravity>(Allocator.TempJob);
-			var gravityEntity = _gravityGroup.GetSingletonEntity();
+			ComponentDataFromEntity<Gravity> gravities = GetComponentDataFromEntity<Gravity>(true);
+			var gravityEntity = GetSingletonEntity<SystemState>();
+			var gravity = gravities[gravityEntity];
 			EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
 			Entities
 				.ForEach((Entity entity, Destroyed destroyed, GravitySwitch gravitySwitch) =>
 				{
-					ecb.SetComponent(gravityEntity, new Gravity { Value = -gravity[0].Value });
+					ecb.SetComponent(gravityEntity, new Gravity { Value = -gravity.Value });
 				}).Run();
 			
 			ecb.Playback(EntityManager);
 			ecb.Dispose();
-			gravity.Dispose();
 			return default;
 		}
 	}
