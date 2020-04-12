@@ -1,10 +1,11 @@
-﻿using Assets.Scripts.Components;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Components;
 using Assets.Scripts.Pools;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
+using Color = Assets.Scripts.Components.Color;
 
 namespace Assets.Scripts.Systems
 {
@@ -13,14 +14,22 @@ namespace Assets.Scripts.Systems
 	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class DestroyBallsSystem : ComponentSystem
 	{
-		private GameObjectPool<Transform> _effectsPool;
+		private readonly List<GameObjectPool<Transform>> _effectsPools = new List<GameObjectPool<Transform>>();
 		private EntityQuery _destroyedBallsGroup;
 		private EntityQuery _systemStateGroup;
 
-		public void Init(Transform destroyEffectPrefab)
+		public void Init(Transform[] destroyEffectPrefabs)
 		{
-			_effectsPool = new GameObjectPool<Transform>(new GameObject("DestroyEffects").transform, destroyEffectPrefab, 5);
-			_destroyedBallsGroup = GetEntityQuery(ComponentType.ReadOnly<Destroyed>(), ComponentType.ReadOnly<CellLink>(), ComponentType.ReadOnly<Translation>());
+			if (_effectsPools.Count == 0)
+			{
+				foreach (var destroyEffectPrefab in destroyEffectPrefabs)
+				{
+					_effectsPools.Add(
+						new GameObjectPool<Transform>(new GameObject("DestroyEffects").transform, destroyEffectPrefab, 5));
+				}
+			}
+
+			_destroyedBallsGroup = GetEntityQuery(ComponentType.ReadOnly<Destroyed>(), ComponentType.ReadOnly<CellLink>(), ComponentType.ReadOnly<Color>(), ComponentType.ReadOnly<Translation>());
 			_systemStateGroup = GetEntityQuery(ComponentType.ReadOnly<SystemState>());
 		}
 
@@ -33,11 +42,12 @@ namespace Assets.Scripts.Systems
 
 			var translations = _destroyedBallsGroup.ToComponentDataArray<Translation>(Allocator.TempJob);
 			var cellLinks = _destroyedBallsGroup.ToComponentDataArray<CellLink>(Allocator.TempJob);
+			var colors = _destroyedBallsGroup.ToComponentDataArray<Color>(Allocator.TempJob);
 
 			for (int i = 0; i < translations.Length; i++)
 			{
 				EntityManager.RemoveComponent<BallLink>(cellLinks[i].Value);
-				var effect = _effectsPool.GetObject();
+				var effect = _effectsPools[colors[i].Value].GetObject();
 				effect.position = translations[i].Value;
 				effect.gameObject.SetActive(true);
 			}
@@ -49,6 +59,7 @@ namespace Assets.Scripts.Systems
 
 			translations.Dispose();
 			cellLinks.Dispose();
+			colors.Dispose();
 		}
 	}
 }

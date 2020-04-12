@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Components;
 using Assets.Scripts.Systems;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace Assets.Scripts
 		[SerializeField]
 		private GameObject[] _gravitySwitchPrefabs;
 		[SerializeField]
-		private Transform _destroyBallPrefab;
+		private Transform[] _destroyBallPrefabs;
 		[SerializeField]
 		private Transform _gravitySwitcherEffectPrefab;
 		[SerializeField]
@@ -38,6 +39,11 @@ namespace Assets.Scripts
 		private void Start()
 		{
 			_manager = World.DefaultGameObjectInjectionWorld.EntityManager;
+			StartGame();
+		}
+
+		private void StartGame()
+		{
 			AdjustCamera();
 			ConvertPrefabs();
 			_field = new Field(_size.x, _size.y, _cellSize, _fieldLeftBottomCorner.position, _manager);
@@ -63,7 +69,7 @@ namespace Assets.Scripts
 			world.GetOrCreateSystem<FindMatchesSystem>().Init(_field);
 			world.GetOrCreateSystem<FallSystem>().Init(_field);
 			world.GetOrCreateSystem<GravitySwitcherPlacementSystem>().Init(_gravitySwitchEntityPrefabs);
-			world.GetOrCreateSystem<DestroyBallsSystem>().Init(_destroyBallPrefab);
+			world.GetOrCreateSystem<DestroyBallsSystem>().Init(_destroyBallPrefabs);
 			world.GetOrCreateSystem<ShowSelectionSystem>().Init(_selection);
 			world.GetOrCreateSystem<InputSystem>().Init(_camera, _field);
 			world.GetOrCreateSystem<SwapSystem>().Init(_field);
