@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using Assets.Scripts.Components;
+﻿using Assets.Scripts.Components;
 using Assets.Scripts.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 using Color = Assets.Scripts.Components.Color;
 
@@ -17,9 +15,11 @@ namespace Assets.Scripts
 		private Entity[] _gravitySwitchEntityPrefabs;
 
 		[SerializeField]
-		private Vector2Int _size;
+		private int2 _size;
 		[SerializeField]
 		private float _cellSize;
+		[SerializeField]
+		private float _fallSpeed;
 		[SerializeField]
 		private Transform _fieldLeftBottomCorner;
 		[SerializeField]
@@ -38,28 +38,23 @@ namespace Assets.Scripts
 		private void Start()
 		{
 			_manager = World.DefaultGameObjectInjectionWorld.EntityManager;
-
+			AdjustCamera();
 			ConvertPrefabs();
 			_field = new Field(_size.x, _size.y, _cellSize, _fieldLeftBottomCorner.position, _manager);
 			InitSystems(World.DefaultGameObjectInjectionWorld);
 		}
 
+		private void AdjustCamera()
+		{
+			_camera.transform.position = _cellSize * new Vector3((_size.x - _cellSize) / 2f, (_size.y - _cellSize) / 2f, _camera.transform.position.z);
+			_camera.orthographicSize = math.max(_size.x / _camera.aspect, _size.y) * _cellSize / 2f;
+		}
+
 		private void ConvertPrefabs()
 		{
-			_ballEntityPrefabs = new Entity[_ballPrefabs.Length];
 			var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
-			for (var i = 0; i < _ballPrefabs.Length; i++)
-			{
-				_ballEntityPrefabs[i] = (GameObjectConversionUtility.ConvertGameObjectHierarchy(_ballPrefabs[i], settings));
-				_manager.AddComponentData(_ballEntityPrefabs[i], new Color {Value = i});
-			}
-
-			_gravitySwitchEntityPrefabs = new Entity[_gravitySwitchPrefabs.Length];
-			for (var i = 0; i < _gravitySwitchPrefabs.Length; i++)
-			{
-				_gravitySwitchEntityPrefabs[i] = (GameObjectConversionUtility.ConvertGameObjectHierarchy(_gravitySwitchPrefabs[i], settings));
-				_manager.AddComponentData(_gravitySwitchEntityPrefabs[i], new Color { Value = i });
-			}
+			_ballEntityPrefabs = CreateEntityPrefabs(_ballPrefabs, settings);
+			_gravitySwitchEntityPrefabs = CreateEntityPrefabs(_gravitySwitchPrefabs, settings);
 		}
 
 		private void InitSystems(World world)
@@ -75,6 +70,19 @@ namespace Assets.Scripts
 
 			var stateEntity = _manager.CreateEntity(typeof(SystemState));
 			_manager.AddComponentData(stateEntity, new Gravity { Value = new int2(0, -1) });
+		}
+
+		private Entity[] CreateEntityPrefabs(GameObject[] ballPrefabs, GameObjectConversionSettings settings)
+		{
+			var ballEntityPrefabs = new Entity[ballPrefabs.Length];
+			for (var i = 0; i < _ballPrefabs.Length; i++)
+			{
+				ballEntityPrefabs[i] = (GameObjectConversionUtility.ConvertGameObjectHierarchy(ballPrefabs[i], settings));
+				_manager.AddComponentData(ballEntityPrefabs[i], new Color {Value = i});
+				_manager.AddComponentData(ballEntityPrefabs[i], new Speed {Value = _fallSpeed});
+			}
+
+			return ballEntityPrefabs;
 		}
 	}
 }

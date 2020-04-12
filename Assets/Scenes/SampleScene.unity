@@ -386,7 +386,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.28, y: 4.51, z: -10}
+  m_LocalPosition: {x: 4.28, y: 4.51, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -421,8 +421,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a16a583d694a04348ba2a47b35449dcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _size: {x: 10, y: 10}
+  _size:
+    x: 100
+    y: 100
   _cellSize: 1
+  _fallSpeed: 5
   _fieldLeftBottomCorner: {fileID: 77500691}
   _ballPrefabs:
   - {fileID: 4544156129461565126, guid: 51809ccefd1e10540b3116c5511495fb, type: 3}

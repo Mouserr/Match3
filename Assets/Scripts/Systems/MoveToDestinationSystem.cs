@@ -8,7 +8,6 @@ using Unity.Transforms;
 namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
-	[UpdateAfter(typeof(SetVelocitySystem))]
 	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class MoveToDestinationSystem : JobComponentSystem
 	{

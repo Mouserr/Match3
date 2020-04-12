@@ -7,7 +7,7 @@ namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
 	[UpdateAfter(typeof(DestroyBallsSystem))]
-	[UpdateBefore(typeof(DestroySystem))]
+	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class GravitySwitchSystem : JobComponentSystem
 	{
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
