@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 8367809372304244114}
   - component: {fileID: 2260863118635804779}
   - component: {fileID: 6283858612764748548}
-  - component: {fileID: 4609562035280373044}
-  - component: {fileID: 1345332590233625599}
   - component: {fileID: -7885745449390706645}
   m_Layer: 0
   m_Name: Blue
@@ -29,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4544156129461565126}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -500}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -82,32 +80,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &4609562035280373044
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4544156129461565126}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1345332590233625599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4544156129461565126}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c6fc792d85af6b4b98c696762de108a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Value: 0
 --- !u!114 &-7885745449390706645
 MonoBehaviour:
   m_ObjectHideFlags: 0

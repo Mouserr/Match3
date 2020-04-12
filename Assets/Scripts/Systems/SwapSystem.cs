@@ -11,6 +11,7 @@ namespace Assets.Scripts.Systems
 	public class SwapSystem : JobComponentSystem
 	{
 		private EntityQuery _selectedGroup;
+		private EntityQuery _systemStateGroup;
 		private Field _field;
 
 		public void Init(Field field)
@@ -22,6 +23,7 @@ namespace Assets.Scripts.Systems
 		{
 			base.OnCreate();
 			_selectedGroup = GetEntityQuery(typeof(BallLink), ComponentType.ReadOnly<GridPosition>(), ComponentType.ReadOnly<Selected>());
+			_systemStateGroup = GetEntityQuery(ComponentType.ReadOnly<SystemState>());
 		}
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -50,7 +52,10 @@ namespace Assets.Scripts.Systems
 					EntityManager.SetComponentData(entities[1], new BallLink { Value = fromBall });
 
 					var swapEntity = EntityManager.CreateEntity();
-					EntityManager.AddComponentData(swapEntity, new Swap {From = fromBall, To = toBall});
+					EntityManager.AddComponentData(swapEntity, new Swap { From = fromBall, To = toBall });
+
+					var systemState = _systemStateGroup.GetSingletonEntity();
+					EntityManager.RemoveComponent<Interactable>(systemState);
 				}
 
 				EntityManager.RemoveComponent<Selected>(entities);

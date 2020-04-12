@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Systems
 {
+	[AlwaysUpdateSystem]
 	public class ShowSelectionSystem : ComponentSystem
 	{
 		private GameObject _selectionInstance;
@@ -23,21 +24,24 @@ namespace Assets.Scripts.Systems
 			_selectedGroup = GetEntityQuery(ComponentType.ReadOnly<BallLink>(), ComponentType.ReadOnly<Translation>(), ComponentType.ReadOnly<Selected>());
 		}
 
-		// TODO: call manual
 		protected override void OnUpdate()
 		{
 			var selected = _selectedGroup.ToEntityArray(Allocator.TempJob);
-			var translations = _selectedGroup.ToComponentDataArray<Translation>(Allocator.TempJob);
-
+			
 			if (selected.Length == 1)
 			{
+				var translations = _selectedGroup.ToComponentDataArray<Translation>(Allocator.TempJob);
 				_selectionInstance.gameObject.SetActive(true);
-				_selectionInstance.transform.position = translations[0].Value;
+				var worldPos = translations[0].Value;
+				_selectionInstance.transform.position = new Vector3(worldPos.x, worldPos.y, _selectionInstance.transform.position.z);
+				translations.Dispose();
 			}
 			else
 			{
 				_selectionInstance.gameObject.SetActive(false);
 			}
+
+			selected.Dispose();
 		}
 	}
 }

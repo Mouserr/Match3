@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Components
 {
-	public struct GravitySwitchSpawner : IComponentData
+	public struct Interactable : IComponentData
 	{
 	}
 }

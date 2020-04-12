@@ -10,7 +10,6 @@ namespace Assets.Scripts
 		private readonly Vector3 _leftBottomPosition;
 		private readonly Entity[] _cells;
 
-		public int2 Gravity { get; set; }
 		public int Width { get; }
 		public int Height { get; }
 		public int2 Size => new int2(Width, Height);

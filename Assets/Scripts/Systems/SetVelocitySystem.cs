@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -11,26 +12,19 @@ namespace Assets.Scripts.Systems
 	[UpdateAfter(typeof(FallSystem))]
 	public class SetVelocitySystem : JobComponentSystem
 	{
-		private BeginInitializationEntityCommandBufferSystem _commandBufferSystem;
-
-		protected override void OnCreate()
-		{
-			base.OnCreate();
-			_commandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-		}
-
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
-			var commandBuffer = _commandBufferSystem.CreateCommandBuffer().ToConcurrent();
-			inputDeps = Entities
+			EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
+			Entities
 				.WithNone<Velocity>()
-				.ForEach((Entity entity, int entityInQueryIndex, in Translation translation, in Destination destination, in Speed speed) =>
+				.ForEach((Entity entity, in Translation translation, in Destination destination, in Speed speed) =>
 				{
-					commandBuffer.AddComponent(entityInQueryIndex, entity, new Velocity { Value = speed.Value * math.normalizesafe(destination.Value - translation.Value) });
-				}).Schedule(inputDeps);
+					ecb.AddComponent(entity, new Velocity { Value = speed.Value * math.normalizesafe(destination.Value - translation.Value) });
+				}).Run();
 
-			_commandBufferSystem.AddJobHandleForProducer(inputDeps);
-			return inputDeps;
+			ecb.Playback(EntityManager);
+			ecb.Dispose();
+			return default;
 		}
 	}
 }

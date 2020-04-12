@@ -11,8 +11,21 @@ namespace Assets.Scripts.Systems
 	[UpdateAfter(typeof(SetVelocitySystem))]
 	public class MoveToDestinationSystem : JobComponentSystem
 	{
+		private EntityQuery _systemStateGroup;
+
+		protected override void OnCreate()
+		{
+			base.OnCreate();
+			_systemStateGroup = GetEntityQuery(ComponentType.ReadOnly<SystemState>(), ComponentType.Exclude<Delay>());
+		}
+
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
+			if (_systemStateGroup.IsEmptyIgnoreFilter)
+			{
+				return default;
+			}
+
 			EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
 			var deltaTime = Time.DeltaTime;
 			Entities

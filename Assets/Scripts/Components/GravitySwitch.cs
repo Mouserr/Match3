@@ -2,6 +2,7 @@
 
 namespace Assets.Scripts.Components
 {
+	[GenerateAuthoringComponent]
 	public struct GravitySwitch : IComponentData
 	{
 	}
