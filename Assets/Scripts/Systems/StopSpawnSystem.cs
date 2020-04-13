@@ -7,7 +7,7 @@ using Unity.Mathematics;
 namespace Assets.Scripts.Systems
 {
 	[AlwaysSynchronizeSystem]
-	[UpdateAfter(typeof(SpawnSystem))]
+	[UpdateAfter(typeof(LimitedSpawnSystem))]
 	[UpdateBefore(typeof(FallSystem))]
 	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class StopSpawnSystem : JobComponentSystem

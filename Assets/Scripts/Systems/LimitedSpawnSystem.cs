@@ -9,9 +9,15 @@ namespace Assets.Scripts.Systems
 	[AlwaysSynchronizeSystem]
 	[UpdateBefore(typeof(BorderSpawnSystem))]
 	[UpdateInGroup(typeof(MatchLogicGroup))]
-	public class SpawnSystem : JobComponentSystem
+	public class LimitedSpawnSystem : JobComponentSystem
 	{
 		private EntityQuery _systemStateGroup;
+		private float _delay;
+
+		public void Init(float size, float speed)
+		{
+			_delay = size / speed;
+		}
 
 		protected override void OnCreate()
 		{
@@ -28,15 +34,17 @@ namespace Assets.Scripts.Systems
 
 			EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
 			var systemEntity = _systemStateGroup.GetSingletonEntity();
+			var delay = _delay;
+
 			Entities
 				.WithNone<Delay>()
 				.WithNone<BallLink>()
 				.WithAll<SpawnLimit>()
 				.ForEach((Entity entity, ref SpawnCount spawnCount, in Spawner spawner, in Translation translation) =>
 				{
-					SpawnBall(ecb, spawner.Prefab, translation, spawner, entity);
+					SpawnBall(ecb, spawner.Prefab, translation, spawner, entity, delay);
 					spawnCount.Value++;
-					ecb.AddComponent(systemEntity, new Delay { Value = 0.2f });
+					ecb.AddComponent(systemEntity, new Delay { Value = delay });
 				}).Run();
 
 			ecb.Playback(EntityManager);
@@ -44,14 +52,15 @@ namespace Assets.Scripts.Systems
 			return default;
 		}
 
-		public static void SpawnBall(EntityCommandBuffer ecb, Entity prefab, Translation translation, Spawner spawner, Entity entity)
+		public static void SpawnBall(EntityCommandBuffer ecb, Entity prefab, Translation translation, Spawner spawner,
+			Entity entity, float delay)
 		{
 			var instance = ecb.Instantiate(prefab);
 			ecb.SetComponent(instance, new Translation { Value = translation.Value + spawner.Offset });
 			ecb.AddComponent(instance, new Destination { Value = translation.Value });
 			ecb.AddComponent(instance, new CellLink { Value = entity });
 			ecb.AddComponent(entity, new BallLink { Value = instance });
-			ecb.AddComponent(entity, new Delay { Value = 0.2f });
+			ecb.AddComponent(entity, new Delay { Value = delay });
 		}
 	}
 }

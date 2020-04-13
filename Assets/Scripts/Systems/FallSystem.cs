@@ -6,7 +6,7 @@ using Unity.Transforms;
 
 namespace Assets.Scripts.Systems
 {
-	[UpdateAfter(typeof(SpawnSystem))]
+	[UpdateAfter(typeof(LimitedSpawnSystem))]
 	[UpdateInGroup(typeof(MatchLogicGroup))]
 	public class FallSystem : ComponentSystem
 	{

@@ -17,8 +17,9 @@ namespace Assets.Scripts.Systems
 		private readonly List<GameObjectPool<Transform>> _effectsPools = new List<GameObjectPool<Transform>>();
 		private EntityQuery _destroyedBallsGroup;
 		private EntityQuery _systemStateGroup;
+		private float _delay;
 
-		public void Init(Transform[] destroyEffectPrefabs)
+		public void Init(Transform[] destroyEffectPrefabs, float delay)
 		{
 			if (_effectsPools.Count == 0)
 			{
@@ -29,6 +30,7 @@ namespace Assets.Scripts.Systems
 				}
 			}
 
+			_delay = delay;
 			_destroyedBallsGroup = GetEntityQuery(ComponentType.ReadOnly<Destroyed>(), ComponentType.ReadOnly<CellLink>(), ComponentType.ReadOnly<Color>(), ComponentType.ReadOnly<Translation>());
 			_systemStateGroup = GetEntityQuery(ComponentType.ReadOnly<SystemState>());
 		}
@@ -54,7 +56,7 @@ namespace Assets.Scripts.Systems
 
 			if (translations.Length > 0)
 			{
-				EntityManager.AddComponentData(_systemStateGroup.GetSingletonEntity(), new Delay {Value = 0.5f});
+				EntityManager.AddComponentData(_systemStateGroup.GetSingletonEntity(), new Delay {Value = _delay });
 			}
 
 			translations.Dispose();

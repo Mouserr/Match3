@@ -12,10 +12,12 @@ namespace Assets.Scripts.Systems
 	{
 		private Entity[] _ballPrefabs;
 		private EntityQuery _systemStateGroup;
+		private float _delay;
 
-		public void Init(Entity[] ballPrefabs)
+		public void Init(Entity[] ballPrefabs, float size, float speed)
 		{
 			_ballPrefabs = ballPrefabs;
+			_delay = size / speed;
 		}
 
 		protected override void OnCreate()
@@ -35,6 +37,7 @@ namespace Assets.Scripts.Systems
 			var prefabs = new NativeArray<Entity>(_ballPrefabs, Allocator.TempJob);
 			var gravityArray = _systemStateGroup.ToComponentDataArray<Gravity>(Allocator.TempJob);
 			var gravity = gravityArray[0];
+			var delay = _delay;
 
 			Entities
 				.WithNone<Delay>()
@@ -47,7 +50,7 @@ namespace Assets.Scripts.Systems
 					}
 
 					var prefab = prefabs[UnityEngine.Random.Range(0, prefabs.Length)];
-					SpawnSystem.SpawnBall(ecb, prefab, translation, spawner, entity);
+					LimitedSpawnSystem.SpawnBall(ecb, prefab, translation, spawner, entity, delay);
 				}).Run();
 
 			ecb.Playback(EntityManager);

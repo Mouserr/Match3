@@ -22,6 +22,8 @@ namespace Assets.Scripts
 		[SerializeField]
 		private float _fallSpeed;
 		[SerializeField]
+		private float _delayOnDestroy;
+		[SerializeField]
 		private Transform _fieldLeftBottomCorner;
 		[SerializeField]
 		private GameObject[] _ballPrefabs;
@@ -65,11 +67,12 @@ namespace Assets.Scripts
 
 		private void InitSystems(World world)
 		{
-			world.GetOrCreateSystem<BorderSpawnSystem>().Init(_ballEntityPrefabs);
+			world.GetOrCreateSystem<BorderSpawnSystem>().Init(_ballEntityPrefabs, _cellSize, _fallSpeed);
+			world.GetOrCreateSystem<LimitedSpawnSystem>().Init(_cellSize, _fallSpeed);
 			world.GetOrCreateSystem<FindMatchesSystem>().Init(_field);
 			world.GetOrCreateSystem<FallSystem>().Init(_field);
 			world.GetOrCreateSystem<GravitySwitcherPlacementSystem>().Init(_gravitySwitchEntityPrefabs);
-			world.GetOrCreateSystem<DestroyBallsSystem>().Init(_destroyBallPrefabs);
+			world.GetOrCreateSystem<DestroyBallsSystem>().Init(_destroyBallPrefabs, _delayOnDestroy);
 			world.GetOrCreateSystem<ShowSelectionSystem>().Init(_selection);
 			world.GetOrCreateSystem<InputSystem>().Init(_camera, _field);
 			world.GetOrCreateSystem<SwapSystem>().Init(_field);
