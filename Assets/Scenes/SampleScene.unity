@@ -351,6 +351,7 @@ MonoBehaviour:
     y: 10
   _cellSize: 1
   _fallSpeed: 5
+  _delayOnDestroy: 0.5
   _fieldLeftBottomCorner: {fileID: 77500691}
   _ballPrefabs:
   - {fileID: 4544156129461565126, guid: 51809ccefd1e10540b3116c5511495fb, type: 3}
