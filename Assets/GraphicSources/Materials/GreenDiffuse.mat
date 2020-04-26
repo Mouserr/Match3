@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blue
-  m_Shader: {fileID: 4800000, guid: 52e2480dda3e5164c9e8ab581594f34c, type: 3}
+  m_Name: GreenDiffuse
+  m_Shader: {fileID: 4800000, guid: 8f31bf54bc93ac34e8d21a7f71e81608, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -67,12 +67,11 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Shininess: 0.078125
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.2704254, g: 0.72829586, b: 0.9716981, a: 1}
+    - _Color: {r: 0, g: 0.6320754, b: 0.02987749, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

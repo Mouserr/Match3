@@ -1,4 +1,4 @@
-﻿Shader "Custom/DiffuseColor"
+﻿Shader "Custom/SurfaceColored"
 {
     Properties
     {
